@@ -1,0 +1,21 @@
+.lesson-viewer {
+  padding: 40px 0;
+}
+
+.lesson-content h1 {
+  margin-bottom: 15px;
+}
+
+.video-container {
+  margin: 30px 0;
+  background: #000;
+}
+
+.video-container video {
+  display: block;
+  max-width: 100%;
+}
+
+.lesson-actions {
+  margin-top: 30px;
+}

@@ -1,0 +1,42 @@
+<div class="quiz-container" *ngIf="quiz">
+  <div class="container">
+    <div class="quiz-header card">
+      <h1>{{ quiz.title }}</h1>
+      <p *ngIf="quiz.description">{{ quiz.description }}</p>
+      <div class="quiz-meta">
+        <span>Passing Score: {{ quiz.passingScore }}%</span>
+        <span *ngIf="quiz.timeLimit">Time Limit: {{ quiz.timeLimit }} minutes</span>
+      </div>
+    </div>
+
+    <div class="quiz-questions">
+      <div *ngFor="let question of quiz.questions; let i = index" class="question-card card">
+        <h3>Question {{ i + 1 }}</h3>
+        <p class="question-text">{{ question.questionText }}</p>
+        <div class="answers">
+          <div 
+            *ngFor="let answer of question.answers" 
+            class="answer-option"
+            [class.selected]="answers[question.id] === answer.id"
+            (click)="selectAnswer(question.id, answer.id)">
+            <input 
+              type="radio" 
+              [name]="'question-' + question.id"
+              [value]="answer.id"
+              [checked]="answers[question.id] === answer.id">
+            <label>{{ answer.answerText }}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quiz-actions card">
+      <button 
+        class="btn btn-primary" 
+        (click)="submitQuiz()"
+        [disabled]="!canSubmit() || submitting">
+        {{ submitting ? 'Submitting...' : 'Submit Quiz' }}
+      </button>
+    </div>
+  </div>
+</div>

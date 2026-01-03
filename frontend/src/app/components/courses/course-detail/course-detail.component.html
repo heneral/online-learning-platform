@@ -1,0 +1,56 @@
+<div *ngIf="loading" class="loading">Loading course details...</div>
+
+<div *ngIf="!loading && course" class="course-detail">
+  <div class="container">
+    <div class="course-header card">
+      <div class="course-info">
+        <h1>{{ course.title }}</h1>
+        <p class="course-description">{{ course.description }}</p>
+        <div class="course-meta">
+          <span>Instructor: <strong>{{ course.instructorName }}</strong></span>
+          <span>Level: <strong>{{ course.level }}</strong></span>
+          <span>Duration: <strong>{{ getTotalDuration() }}</strong></span>
+          <span>Students: <strong>{{ course.enrollmentCount }}</strong></span>
+        </div>
+        <div class="course-actions">
+          <span class="course-price">${{ course.price }}</span>
+          <button 
+            *ngIf="!isEnrolled" 
+            class="btn btn-primary" 
+            (click)="enroll()"
+            [disabled]="enrolling">
+            {{ enrolling ? 'Enrolling...' : 'Enroll Now' }}
+          </button>
+          <button 
+            *ngIf="isEnrolled" 
+            class="btn btn-success" 
+            routerLink="/student/dashboard">
+            Go to My Learning
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="course-content">
+      <div class="lessons-section card">
+        <h2>Course Content</h2>
+        <p>{{ course.lessons?.length || 0 }} lessons</p>
+        <div class="lessons-list">
+          <div *ngFor="let lesson of course.lessons; let i = index" class="lesson-item">
+            <div class="lesson-info">
+              <span class="lesson-number">{{ i + 1 }}</span>
+              <div>
+                <h4>{{ lesson.title }}</h4>
+                <p *ngIf="lesson.description">{{ lesson.description }}</p>
+              </div>
+            </div>
+            <div class="lesson-meta">
+              <span>{{ getDuration(lesson.durationInSeconds) }} min</span>
+              <span *ngIf="lesson.isFree" class="badge-free">Free Preview</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
