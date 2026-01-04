@@ -1,6 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, finalize } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { User, AuthResponse, AuthResponseDto, LoginRequest, RegisterRequest } from '../models/models';
 import { environment } from '../../environments/environment';
@@ -87,7 +87,10 @@ export class AuthService {
     // Call backend logout endpoint
     return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
       map(() => {
-        // Remove user from local storage and set current user to null (only in browser)
+        // Backend logout successful
+      }),
+      finalize(() => {
+        // Always clear local state regardless of backend response
         if (isPlatformBrowser(this.platformId)) {
           localStorage.removeItem('currentUser');
           localStorage.removeItem('token');

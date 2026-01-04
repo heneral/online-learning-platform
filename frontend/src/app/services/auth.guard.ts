@@ -12,18 +12,13 @@ export class AuthGuard implements CanActivate {
     console.log('AuthGuard: currentUserValue =', this.authService.currentUserValue);
     console.log('AuthGuard: isLoggedIn =', this.authService.isLoggedIn);
 
-    // Temporarily allow access for development - remove this in production
-    console.log('AuthGuard: allowing access (development mode)');
-    return true;
-
-    // Original logic (commented out for development)
-    // if (this.authService.isLoggedIn) {
-    //   console.log('AuthGuard: allowing access');
-    //   return true;
-    // } else {
-    //   console.log('AuthGuard: redirecting to home');
-    //   this.router.navigate(['/']);
-    //   return false;
-    // }
+    if (this.authService.isLoggedIn) {
+      console.log('AuthGuard: allowing access');
+      return true;
+    } else {
+      console.log('AuthGuard: redirecting to home');
+      this.router.navigate(['/']);
+      return false;
+    }
   }
 }
