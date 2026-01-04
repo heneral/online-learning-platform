@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, Inject, PLATFORM_ID, HostListener } from '@angular/core';
 import { RouterLink, RouterOutlet, RouterLinkActive, Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { User } from '../models/models';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,8 +19,23 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
   sidebarCollapsed = false;
   currentPageTitle = 'Dashboard Overview';
   searchQuery = '';
-  window = window; // Make window available in template
+  isBrowser = false; // Will be set to true only in browser
   private routerSubscription: Subscription = new Subscription();
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    this.currentUser = this.authService.currentUserValue;
+    // Check if we're on mobile initially
+    this.checkMobileView();
+  }
+
+  get isMobileView(): boolean {
+    return this.isBrowser && window.innerWidth <= 768;
+  }
 
   private pageTitles: { [key: string]: string } = {
     'overview': 'Dashboard Overview',
@@ -29,15 +45,6 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
     'lessons': 'Lesson Management',
     'quizzes': 'Quiz Management'
   };
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
-    this.currentUser = this.authService.currentUserValue;
-    // Check if we're on mobile initially
-    this.checkMobileView();
-  }
 
   ngOnInit() {
     // Subscribe to router events to update page title
@@ -53,7 +60,7 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit() {
     // Initialize Bootstrap dropdown after view is ready
-    if (typeof (window as any).bootstrap !== 'undefined') {
+    if (this.isBrowser && typeof (window as any).bootstrap !== 'undefined') {
       const dropdownElement = document.getElementById('page-header-user-dropdown');
       if (dropdownElement) {
         new (window as any).bootstrap.Dropdown(dropdownElement);
@@ -88,7 +95,7 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
 
   private checkMobileView() {
     // On mobile, sidebar should be collapsed by default
-    if (window.innerWidth <= 768) {
+    if (this.isBrowser && window.innerWidth <= 768) {
       this.sidebarCollapsed = true;
     }
   }
@@ -96,10 +103,12 @@ export class Dashboard implements OnInit, OnDestroy, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onResize(event: any) {
     // Auto-collapse sidebar on mobile, auto-expand on desktop
-    if (event.target.innerWidth <= 768) {
-      this.sidebarCollapsed = true;
-    } else {
-      this.sidebarCollapsed = false;
+    if (this.isBrowser) {
+      if (event.target.innerWidth <= 768) {
+        this.sidebarCollapsed = true;
+      } else {
+        this.sidebarCollapsed = false;
+      }
     }
   }
 

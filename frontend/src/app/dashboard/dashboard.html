@@ -37,7 +37,7 @@
 
   <!-- Mobile Overlay -->
   <div class="sidebar-overlay"
-       *ngIf="!sidebarCollapsed && window.innerWidth <= 768"
+       *ngIf="!sidebarCollapsed && isMobileView"
        (click)="toggleSidebar()"></div>
 
   <!-- Main Content -->
