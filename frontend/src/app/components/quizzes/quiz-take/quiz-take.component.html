@@ -1,42 +1,21 @@
-<div class="quiz-container" *ngIf="quiz">
-  <div class="container">
-    <div class="quiz-header card">
-      <h1>{{ quiz.title }}</h1>
-      <p *ngIf="quiz.description">{{ quiz.description }}</p>
-      <div class="quiz-meta">
-        <span>Passing Score: {{ quiz.passingScore }}%</span>
-        <span *ngIf="quiz.timeLimit">Time Limit: {{ quiz.timeLimit }} minutes</span>
-      </div>
-    </div>
-
-    <div class="quiz-questions">
-      <div *ngFor="let question of quiz.questions; let i = index" class="question-card card">
-        <h3>Question {{ i + 1 }}</h3>
-        <p class="question-text">{{ question.questionText }}</p>
-        <div class="answers">
-          <div 
-            *ngFor="let answer of question.answers" 
-            class="answer-option"
-            [class.selected]="answers[question.id] === answer.id"
-            (click)="selectAnswer(question.id, answer.id)">
-            <input 
-              type="radio" 
-              [name]="'question-' + question.id"
-              [value]="answer.id"
-              [checked]="answers[question.id] === answer.id">
-            <label>{{ answer.answerText }}</label>
+<div class="quiz-take">
+  <div *ngIf="quiz">
+    <h1>{{ quiz.title }}</h1>
+    <p>{{ quiz.description }}</p>
+    <form (ngSubmit)="submitQuiz()">
+      <div *ngFor="let question of quiz.questions; let i = index">
+        <div class="question">
+          <h3>{{ i + 1 }}. {{ question.questionText }}</h3>
+          <div *ngFor="let answer of question.answers">
+            <label>
+              <input type="checkbox" [value]="answer.id" (change)="onAnswerChange(question.id, answer.id, $event)">
+              {{ answer.answerText }}
+            </label>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="quiz-actions card">
-      <button 
-        class="btn btn-primary" 
-        (click)="submitQuiz()"
-        [disabled]="!canSubmit() || submitting">
-        {{ submitting ? 'Submitting...' : 'Submit Quiz' }}
-      </button>
-    </div>
+      <button type="submit" [disabled]="!canSubmit()">Submit Quiz</button>
+    </form>
   </div>
+  <div *ngIf="!quiz">Loading quiz...</div>
 </div>

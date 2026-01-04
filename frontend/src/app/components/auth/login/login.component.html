@@ -1,42 +1,69 @@
 <div class="auth-container">
-  <div class="auth-card card">
-    <h2 class="text-center">Login to Your Account</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label class="form-label">Email</label>
-        <input 
-          type="email" 
-          class="form-control" 
+  <div class="auth-header">
+    <h2>Welcome Back</h2>
+    <p>Sign in to your account</p>
+  </div>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <div class="input-wrapper">
+        <i class="fas fa-envelope input-icon"></i>
+        <input
+          type="email"
+          id="email"
           formControlName="email"
-          placeholder="Enter your email">
-        <div class="text-error" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-          Please enter a valid email
-        </div>
+          placeholder="Enter your email"
+          class="form-input"
+          [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+        >
       </div>
+      <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+        <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</span>
+        <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email</span>
+      </div>
+    </div>
 
-      <div class="form-group">
-        <label class="form-label">Password</label>
-        <input 
-          type="password" 
-          class="form-control" 
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-wrapper">
+        <i class="fas fa-lock input-icon"></i>
+        <input
+          type="password"
+          id="password"
           formControlName="password"
-          placeholder="Enter your password">
-        <div class="text-error" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          Password must be at least 6 characters
-        </div>
+          placeholder="Enter your password"
+          class="form-input"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        >
       </div>
-
-      <div class="text-error" *ngIf="errorMessage">
-        {{ errorMessage }}
+      <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+        <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</span>
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters</span>
       </div>
+    </div>
 
-      <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
-        {{ loading ? 'Logging in...' : 'Login' }}
-      </button>
-    </form>
+    <div class="form-options">
+      <label class="checkbox-label">
+        <input type="checkbox" class="checkbox-input">
+        <span class="checkmark"></span>
+        Remember me
+      </label>
+      <a href="#" class="forgot-password">Forgot password?</a>
+    </div>
 
-    <p class="text-center mt-20">
-      Don't have an account? <a routerLink="/register">Register here</a>
-    </p>
+    <div class="error-message" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <button type="submit" class="auth-button" [disabled]="loading">
+      <i class="fas fa-sign-in-alt" *ngIf="!loading"></i>
+      <i class="fas fa-spinner fa-spin" *ngIf="loading"></i>
+      <span>{{ loading ? 'Signing in...' : 'Sign In' }}</span>
+    </button>
+  </form>
+
+  <div class="auth-footer">
+    <p>Don't have an account? <a href="#" (click)="onSwitchToRegister()">Sign up</a></p>
   </div>
 </div>

@@ -1,0 +1,250 @@
+<!-- Navigation Header -->
+<header class="navbar">
+  <div class="nav-container">
+    <div class="logo">
+      <h2>LearnHub</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#courses">Courses</a>
+      <a href="#about">About</a>
+    </nav>
+    <div class="auth-buttons">
+      <button *ngIf="!isLoggedIn" class="btn-secondary" (click)="openLogin()">Login</button>
+      <button *ngIf="isLoggedIn" class="btn-secondary" (click)="goToDashboard()">Dashboard</button>
+      <button *ngIf="!isLoggedIn" class="btn-primary" (click)="openRegister()">Sign Up</button>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Master New Skills with <span class="highlight">Expert-Led</span> Courses
+      </h1>
+      <p class="hero-subtitle">
+        Join thousands of learners worldwide. Access high-quality courses, interactive lessons,
+        and earn certificates to boost your career.
+      </p>
+      <div class="hero-actions">
+        <button *ngIf="!isLoggedIn" class="btn-primary-large" (click)="openRegister()">Start Learning Today</button>
+        <button *ngIf="isLoggedIn" class="btn-primary-large" (click)="goToDashboard()">Go to Dashboard</button>
+        <button class="btn-secondary-large" (click)="scrollToCourses()">Explore Courses</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">10,000+</span>
+          <span class="stat-label">Students</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">500+</span>
+          <span class="stat-label">Courses</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">50+</span>
+          <span class="stat-label">Instructors</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="floating-card card-1">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Learn Anywhere</span>
+      </div>
+      <div class="floating-card card-2">
+        <i class="fas fa-certificate"></i>
+        <span>Get Certified</span>
+      </div>
+      <div class="floating-card card-3">
+        <i class="fas fa-users"></i>
+        <span>Join Community</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features">
+  <div class="container">
+    <div class="section-header">
+      <p>Discover the features that make learning engaging and effective</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <h3>Expert Instructors</h3>
+        <p>Learn from industry professionals with years of real-world experience and proven teaching methods.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3>Flexible Learning</h3>
+        <p>Study at your own pace with lifetime access to courses. Learn when and where it suits you best.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <h3>Interactive Content</h3>
+        <p>Engage with videos, quizzes, hands-on projects, and interactive exercises for better retention.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h3>Achievements & Certificates</h3>
+        <p>Earn certificates and badges as you complete courses and reach learning milestones.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <h3>Mobile Learning</h3>
+        <p>Access your courses on any device. Continue learning on the go with our mobile-friendly platform.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-comments"></i>
+        </div>
+        <h3>Community Support</h3>
+        <p>Join discussion forums, connect with fellow learners, and get help from instructors and peers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Courses Preview -->
+<section id="courses" class="courses-preview">
+  <div class="container">
+    <div class="section-header">
+      <p>Start your learning journey with our most popular courses</p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card">
+        <div class="course-image">
+          <i class="fas fa-code"></i>
+        </div>
+        <div class="course-content">
+          <h3>Web Development Bootcamp</h3>
+          <p>Master HTML, CSS, JavaScript, and modern frameworks</p>
+          <div class="course-meta">
+            <span class="rating">⭐ 4.8</span>
+            <span class="students">2,500 students</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-image">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="course-content">
+          <h3>Data Science Fundamentals</h3>
+          <p>Learn Python, statistics, and machine learning basics</p>
+          <div class="course-meta">
+            <span class="rating">⭐ 4.9</span>
+            <span class="students">1,800 students</span>
+          </div>
+        </div>
+      </div>
+      <div class="course-card">
+        <div class="course-image">
+          <i class="fas fa-mobile"></i>
+        </div>
+        <div class="course-content">
+          <h3>Mobile App Development</h3>
+          <p>Build iOS and Android apps with React Native</p>
+          <div class="course-meta">
+            <span class="rating">⭐ 4.7</span>
+            <span class="students">1,200 students</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="courses-cta">
+      <button *ngIf="!isLoggedIn" class="btn-primary-large" (click)="openRegister()">View All Courses</button>
+      <button *ngIf="isLoggedIn" class="btn-primary-large" (click)="goToDashboard()">View All Courses</button>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2 *ngIf="!isLoggedIn">Ready to Start Your Learning Journey?</h2>
+      <h2 *ngIf="isLoggedIn">Continue Your Learning Journey</h2>
+      <p *ngIf="!isLoggedIn">Join our community of learners and unlock your potential today.</p>
+      <p *ngIf="isLoggedIn">Access your courses and continue learning where you left off.</p>
+      <button *ngIf="!isLoggedIn" class="btn-primary-large" (click)="openRegister()">Get Started Free</button>
+      <button *ngIf="isLoggedIn" class="btn-primary-large" (click)="goToDashboard()">Continue Learning</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>LearnHub</h3>
+        <p>Empowering learners worldwide with quality education and skill development.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#courses">Courses</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 LearnHub. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Auth Modal -->
+<div class="auth-modal" *ngIf="showAuthModal" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+  <div class="auth-modal-backdrop" (click)="closeModal()"></div>
+  <div class="auth-modal-container">
+    <div class="auth-modal-content" (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div class="auth-modal-header">
+        <button type="button" class="auth-modal-close" (click)="closeModal()" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="auth-modal-body">
+        <app-login
+          *ngIf="authMode === 'login'"
+          (switchToRegister)="switchToRegister()"
+          (loginSuccess)="onLoginSuccess()">
+        </app-login>
+        <app-register
+          *ngIf="authMode === 'register'"
+          (switchToLogin)="switchToLogin()"
+          (registerSuccess)="onRegisterSuccess()">
+        </app-register>
+      </div>
+    </div>
+  </div>
+</div>

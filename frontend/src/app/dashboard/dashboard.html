@@ -1,0 +1,111 @@
+<div class="dashboard-layout">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="logo-text">LearnHub</span>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/dashboard/overview" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/dashboard/courses" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-book"></i>
+        <span>Courses</span>
+      </a>
+      <a routerLink="/dashboard/users" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-users"></i>
+        <span>Users</span>
+      </a>
+      <a routerLink="/dashboard/achievements" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-trophy"></i>
+        <span>Achievements</span>
+      </a>
+      <a routerLink="/dashboard/lessons" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span>Lessons</span>
+      </a>
+      <a routerLink="/dashboard/quizzes" routerLinkActive="active" class="nav-item">
+        <i class="fas fa-question-circle"></i>
+        <span>Quizzes</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Mobile Overlay -->
+  <div class="sidebar-overlay"
+       *ngIf="!sidebarCollapsed && window.innerWidth <= 768"
+       (click)="toggleSidebar()"></div>
+
+  <!-- Main Content -->
+  <div class="dashboard-main" [class.sidebar-collapsed]="sidebarCollapsed">
+    <header class="dashboard-header">
+      <div class="header-content">
+        <button (click)="toggleSidebar()" class="sidebar-toggle-btn" [class.active]="sidebarCollapsed" title="Toggle Sidebar">
+          <i class="fas" [class.fa-bars]="!sidebarCollapsed" [class.fa-chevron-right]="sidebarCollapsed"></i>
+        </button>
+        <div class="search-container">
+          <div class="search-input-wrapper">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" 
+                   class="search-input" 
+                   placeholder="Search courses, users, lessons..." 
+                   [(ngModel)]="searchQuery"
+                   (input)="onSearchInput($event)">
+          </div>
+        </div>
+      </div>
+      <div class="user-menu-container">
+        <button type="button" class="btn dropdown-toggle" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="d-flex align-items-center">
+            <div *ngIf="!currentUser?.avatarUrl" class="header-profile-user user-avatar-small" [style.background-color]="getAvatarColor()">
+              {{ getDefaultAvatar() }}
+            </div>
+            <img *ngIf="currentUser?.avatarUrl" class="rounded-circle header-profile-user" [src]="currentUser!.avatarUrl" alt="Header Avatar">
+            <span class="text-start ms-xl-2">
+              <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{ currentUser?.firstName }}</span>
+              <span class="d-none d-xl-block ms-1 fs-12 user-name-sub-text">{{ currentUser?.roles?.join(', ') }}</span>
+            </span>
+          </span>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end">
+          <!-- item-->
+          <h6 class="dropdown-header">Welcome {{ currentUser?.firstName }}!</h6>
+          <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
+          <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
+          <a class="dropdown-item" href="apps-tasks-kanban.html"><i class="mdi mdi-calendar-check-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Taskboard</span></a>
+          <a class="dropdown-item" href="pages-faqs.html"><i class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Help</span></a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="pages-profile.html"><i class="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>$5971.67</b></span></a>
+          <a class="dropdown-item" href="pages-profile-settings.html"><span class="badge bg-success-subtle text-success mt-1 float-end">New</span><i class="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Settings</span></a>
+          <a class="dropdown-item" href="auth-lockscreen-basic.html"><i class="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
+          <a class="dropdown-item" (click)="logout()"><i class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span class="align-middle" data-key="t-logout">Logout</span></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Breadcrumb Navigation -->
+    <div class="breadcrumb-container">
+      <div class="page-title">{{ currentPageTitle.toUpperCase() }}</div>
+      <nav class="breadcrumb-nav">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a routerLink="/dashboard/overview" class="breadcrumb-link">
+              Dashboard
+            </a>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">
+            {{ currentPageTitle }}
+          </li>
+        </ol>
+      </nav>
+    </div>
+
+    <div class="dashboard-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

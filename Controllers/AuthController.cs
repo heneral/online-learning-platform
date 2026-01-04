@@ -75,6 +75,14 @@ public class AuthController : ControllerBase
         return Ok(token);
     }
 
+    [HttpPost("logout")]
+    public IActionResult Logout()
+    {
+        // For JWT, logout is handled client-side by removing the token
+        // In a more advanced setup, you could blacklist the token here
+        return Ok(new { message = "Logged out successfully" });
+    }
+
     private async Task<AuthResponseDto> GenerateJwtToken(ApplicationUser user)
     {
         var userRoles = await _userManager.GetRolesAsync(user);

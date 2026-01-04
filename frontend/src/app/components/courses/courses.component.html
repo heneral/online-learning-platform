@@ -1,59 +1,41 @@
-<div class="courses-page">
-  <div class="container">
-    <h1>Browse Courses</h1>
+<div class="courses-container">
+  <h1>Courses</h1>
 
-    <!-- Filters -->
-    <div class="filters card">
-      <div class="filter-group">
-        <input 
-          type="text" 
-          class="form-control" 
-          placeholder="Search courses..." 
-          [(ngModel)]="searchTerm"
-          (keyup.enter)="onSearch()">
-        <button class="btn btn-primary" (click)="onSearch()">Search</button>
-      </div>
+  <div class="filters">
+    <input type="text" [(ngModel)]="searchTerm" (input)="loadCourses()" placeholder="Search courses..." />
 
-      <div class="filter-group">
-        <select class="form-control" [(ngModel)]="selectedCategoryId" (change)="onCategoryChange(selectedCategoryId)">
-          <option [value]="undefined">All Categories</option>
-          <option *ngFor="let category of categories" [value]="category.id">
-            {{ category.name }}
-          </option>
-        </select>
+    <select [(ngModel)]="selectedLevel" (change)="loadCourses()">
+      <option value="">All Levels</option>
+      <option value="Beginner">Beginner</option>
+      <option value="Intermediate">Intermediate</option>
+      <option value="Advanced">Advanced</option>
+    </select>
 
-        <select class="form-control" [(ngModel)]="selectedLevel" (change)="onLevelChange(selectedLevel)">
-          <option value="">All Levels</option>
-          <option value="Beginner">Beginner</option>
-          <option value="Intermediate">Intermediate</option>
-          <option value="Advanced">Advanced</option>
-        </select>
-      </div>
-    </div>
+    <select [(ngModel)]="selectedCategoryId" (change)="loadCourses()">
+      <option [ngValue]="undefined">All Categories</option>
+      <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+    </select>
+  </div>
 
-    <!-- Courses Grid -->
-    <div *ngIf="loading" class="loading">Loading courses...</div>
-    
-    <div *ngIf="!loading && courses.length === 0" class="text-center">
-      <p>No courses found.</p>
-    </div>
+  <div *ngIf="loading" class="loading">Loading courses...</div>
 
-    <div *ngIf="!loading && courses.length > 0" class="grid grid-cols-3">
-      <div *ngFor="let course of courses" class="course-card card">
-        <img [src]="getCourseImage(course)" [alt]="course.title" class="course-image">
-        <div class="course-content">
-          <h3>{{ course.title }}</h3>
-          <p class="course-description">{{ course.description }}</p>
-          <p class="course-instructor">By {{ course.instructorName }}</p>
-          <div class="course-meta">
-            <span class="course-level">{{ course.level }}</span>
-            <span class="course-price">${{ course.price }}</span>
-          </div>
-          <a [routerLink]="['/courses', course.id]" class="btn btn-primary btn-block mt-20">
-            View Details
-          </a>
+  <div *ngIf="!loading" class="courses-grid">
+    <div *ngFor="let course of courses" class="course-card" (click)="viewCourse(course.id)">
+      <img *ngIf="course.thumbnailUrl" [src]="course.thumbnailUrl" [alt]="course.title" />
+      <div class="course-info">
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+        <div class="course-meta">
+          <span>{{ course.level }}</span>
+          <span>{{ course.durationInMinutes }} min</span>
+          <span *ngIf="course.isFree">Free</span>
+          <span *ngIf="!course.isFree">${{ course.price }}</span>
         </div>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="!loading && courses.length === 0" class="no-courses">
+    No courses found.
   </div>
 </div>

@@ -1,0 +1,77 @@
+<div class="overview-content">
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h3>150</h3>
+      <p>Total Students</p>
+    </div>
+    <div class="stat-card">
+      <h3>25</h3>
+      <p>Total Instructors</p>
+    </div>
+    <div class="stat-card">
+      <h3>45</h3>
+      <p>Total Courses</p>
+    </div>
+    <div class="stat-card">
+      <h3>320</h3>
+      <p>Total Enrollments</p>
+    </div>
+  </div>
+
+  <div class="charts-section">
+    <h3>Analytics Overview</h3>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h4>Enrollment Trends</h4>
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="lineChartData"
+                  [options]="lineChartOptions"
+                  [type]="'line'">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4>Course Popularity</h4>
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="barChartData"
+                  [options]="barChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h4>User Distribution</h4>
+        <div class="chart-container">
+          <canvas baseChart
+                  [data]="doughnutChartData"
+                  [options]="doughnutChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="recent-activity">
+    <h3>Recent Activity</h3>
+    <div class="activity-list">
+      <div class="activity-item">
+        <p>New student enrolled in "Angular Basics"</p>
+        <span>2 hours ago</span>
+      </div>
+      <div class="activity-item">
+        <p>Course "React Advanced" completed by 5 students</p>
+        <span>4 hours ago</span>
+      </div>
+      <div class="activity-item">
+        <p>New instructor joined the platform</p>
+        <span>1 day ago</span>
+      </div>
+    </div>
+  </div>
+</div>

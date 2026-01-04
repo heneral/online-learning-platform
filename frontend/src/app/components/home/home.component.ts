@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CourseService } from '../../services/course.service';
 import { CategoryService } from '../../services/category.service';
@@ -6,6 +7,8 @@ import { Course, Category } from '../../models/models';
 
 @Component({
   selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
@@ -36,7 +39,7 @@ export class HomeComponent implements OnInit {
     });
 
     this.categoryService.getCategories().subscribe({
-      next: (categories) => {
+      next: (categories: Category[]) => {
         this.categories = categories;
       }
     });

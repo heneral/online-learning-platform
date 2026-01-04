@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CourseService } from '../../services/course.service';
 import { CategoryService } from '../../services/category.service';
@@ -6,6 +8,8 @@ import { Course, Category } from '../../models/models';
 
 @Component({
   selector: 'app-courses',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './courses.component.html',
   styleUrls: ['./courses.component.css']
 })
@@ -30,7 +34,7 @@ export class CoursesComponent implements OnInit {
     });
 
     this.categoryService.getCategories().subscribe({
-      next: (categories) => {
+      next: (categories: Category[]) => {
         this.categories = categories;
       }
     });
@@ -59,6 +63,11 @@ export class CoursesComponent implements OnInit {
 
   onLevelChange(level: string): void {
     this.loadCourses();
+  }
+
+  viewCourse(courseId: number): void {
+    // Navigate to course detail page
+    console.log('View course:', courseId);
   }
 
   getCourseImage(course: Course): string {

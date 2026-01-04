@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { CourseService } from '../../../services/course.service';
 import { AnalyticsService } from '../../../services/analytics.service';
@@ -6,6 +7,8 @@ import { Course, InstructorStats } from '../../../models/models';
 
 @Component({
   selector: 'app-instructor-dashboard',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './instructor-dashboard.component.html',
   styleUrls: ['./instructor-dashboard.component.css']
 })
@@ -33,7 +36,7 @@ export class InstructorDashboardComponent implements OnInit {
     });
 
     this.analyticsService.getInstructorStats().subscribe({
-      next: (stats) => {
+      next: (stats: InstructorStats) => {
         this.stats = stats;
       }
     });

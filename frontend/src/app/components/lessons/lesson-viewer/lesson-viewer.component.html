@@ -1,21 +1,15 @@
-<div class="lesson-viewer" *ngIf="lesson">
-  <div class="container">
-    <div class="lesson-content card">
-      <h1>{{ lesson.title }}</h1>
-      <p *ngIf="lesson.description">{{ lesson.description }}</p>
-      
-      <div class="video-container" *ngIf="lesson.videoUrl">
-        <video controls width="100%">
-          <source [src]="lesson.videoUrl" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-
-      <div class="lesson-actions">
-        <button class="btn btn-success" (click)="markComplete()">
-          Mark as Complete
-        </button>
-      </div>
+<div class="lesson-viewer">
+  <div *ngIf="lesson">
+    <h1>{{ lesson.title }}</h1>
+    <p>{{ lesson.description }}</p>
+    <div *ngIf="lesson.videoUrl">
+      <video controls>
+        <source [src]="lesson.videoUrl" type="video/mp4">
+      </video>
+    </div>
+    <div class="progress">
+      <button (click)="markComplete()">Mark as Completed</button>
     </div>
   </div>
+  <div *ngIf="!lesson">Loading lesson...</div>
 </div>

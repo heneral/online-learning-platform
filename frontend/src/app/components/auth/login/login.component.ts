@@ -1,14 +1,20 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  @Output() switchToRegister = new EventEmitter<void>();
+  @Output() loginSuccess = new EventEmitter<void>();
+
   loginForm: FormGroup;
   errorMessage = '';
   loading = false;
@@ -25,7 +31,9 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    console.log('Submitting login form');
     if (this.loginForm.invalid) {
+      console.log('Form is invalid');
       return;
     }
 
@@ -34,19 +42,19 @@ export class LoginComponent {
 
     this.authService.login(this.loginForm.value).subscribe({
       next: (response) => {
-        const user = this.authService.currentUserValue;
-        if (user?.roles.includes('Admin')) {
-          this.router.navigate(['/admin/dashboard']);
-        } else if (user?.roles.includes('Instructor')) {
-          this.router.navigate(['/instructor/dashboard']);
-        } else {
-          this.router.navigate(['/student/dashboard']);
-        }
+        console.log('Login successful:', response);
+        this.loginSuccess.emit();
+        console.log('Emitted login success');
       },
       error: (error) => {
+        console.error('Login error:', error);
         this.errorMessage = error.error?.message || 'Invalid email or password';
         this.loading = false;
       }
     });
+  }
+
+  onSwitchToRegister(): void {
+    this.switchToRegister.emit();
   }
 }

@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuizService } from '../../../services/quiz.service';
-import { Quiz, QuizSubmission } from '../../../models/models';
+import { Quiz, QuizSubmission, QuizQuestion } from '../../../models/models';
 
 @Component({
   selector: 'app-quiz-take',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './quiz-take.component.html',
   styleUrls: ['./quiz-take.component.css']
 })
@@ -41,7 +45,7 @@ export class QuizTakeComponent implements OnInit {
       quizId: this.quiz.id,
       answers: Object.entries(this.answers).map(([questionId, answerId]) => ({
         questionId: +questionId,
-        selectedAnswerId: answerId
+        selectedAnswerIds: [answerId]
       })),
       timeSpentInSeconds: Math.floor((new Date().getTime() - this.startTime.getTime()) / 1000)
     };
@@ -62,8 +66,16 @@ export class QuizTakeComponent implements OnInit {
     return !!this.answers[questionId];
   }
 
+  onAnswerChange(questionId: number, answerId: number, event: any): void {
+    if (event.target.checked) {
+      this.answers[questionId] = answerId;
+    } else {
+      delete this.answers[questionId];
+    }
+  }
+
   canSubmit(): boolean {
-    if (!this.quiz) return false;
-    return this.quiz.questions.every(q => this.isAnswered(q.id));
+    if (!this.quiz?.questions) return false;
+    return this.quiz.questions.every((q: QuizQuestion) => this.isAnswered(q.id));
   }
 }

@@ -1,24 +1,35 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import { User, AuthResponse, AuthResponseDto, LoginRequest, RegisterRequest } from '../models/models';
 import { environment } from '../../environments/environment';
-import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUserSubject: BehaviorSubject<User | null>;
-  public currentUser: Observable<User | null>;
   private apiUrl = `${environment.apiUrl}/auth`;
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {
-    const storedUser = localStorage.getItem('currentUser');
-    this.currentUserSubject = new BehaviorSubject<User | null>(
-      storedUser ? JSON.parse(storedUser) : null
-    );
-    this.currentUser = this.currentUserSubject.asObservable();
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    // Check if user is stored in localStorage (only in browser)
+    if (isPlatformBrowser(this.platformId)) {
+      const storedUser = localStorage.getItem('currentUser');
+      if (storedUser) {
+        try {
+          this.currentUserSubject.next(JSON.parse(storedUser));
+        } catch (e) {
+          // Invalid JSON, clear it
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('token');
+        }
+      }
+    }
   }
 
   public get currentUserValue(): User | null {
@@ -26,63 +37,63 @@ export class AuthService {
   }
 
   public get isLoggedIn(): boolean {
-    return !!this.currentUserValue && !!this.getToken();
-  }
-
-  public get userRoles(): string[] {
-    return this.currentUserValue?.roles || [];
-  }
-
-  public isInRole(role: string): boolean {
-    return this.userRoles.includes(role);
+    return !!this.currentUserValue;
   }
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials)
-      .pipe(
-        tap(response => {
-          if (response && response.token) {
-            localStorage.setItem('token', response.token);
-            const user: User = {
-              id: response.userId,
-              email: response.email,
-              fullName: response.email,
-              roles: response.roles
-            };
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
-          }
-        })
-      );
+    return this.http.post<AuthResponseDto>(`${this.apiUrl}/login`, credentials)
+      .pipe(map(response => {
+        const user: User = {
+          id: response.userId,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          roles: response.roles,
+          avatarUrl: response.avatarUrl
+        };
+        // Store user details and jwt token in local storage (only in browser)
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('token', response.token);
+        }
+        console.log('User set in auth service:', user);
+        this.currentUserSubject.next(user);
+        return { user, token: response.token };
+      }));
   }
 
   register(data: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data)
-      .pipe(
-        tap(response => {
-          if (response && response.token) {
-            localStorage.setItem('token', response.token);
-            const user: User = {
-              id: response.userId,
-              email: response.email,
-              fullName: data.fullName,
-              roles: response.roles
-            };
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            this.currentUserSubject.next(user);
-          }
-        })
-      );
+    return this.http.post<AuthResponseDto>(`${this.apiUrl}/register`, data)
+      .pipe(map(response => {
+        const user: User = {
+          id: response.userId,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          roles: response.roles,
+          avatarUrl: response.avatarUrl
+        };
+        // Store user details and jwt token in local storage (only in browser)
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          localStorage.setItem('token', response.token);
+        }
+        this.currentUserSubject.next(user);
+        return { user, token: response.token };
+      }));
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('currentUser');
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
-  }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
+  logout(): Observable<any> {
+    // Call backend logout endpoint
+    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+      map(() => {
+        // Remove user from local storage and set current user to null (only in browser)
+        if (isPlatformBrowser(this.platformId)) {
+          localStorage.removeItem('currentUser');
+          localStorage.removeItem('token');
+        }
+        this.currentUserSubject.next(null);
+      })
+    );
   }
 }
